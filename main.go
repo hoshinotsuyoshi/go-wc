@@ -143,7 +143,7 @@ func parseFlagOptions() *FlagOptions {
 	return opts
 }
 
-func main() {
+func Execute() {
 	opts := parseFlagOptions()
 
 	var totalCount = &Counter{}
@@ -182,4 +182,8 @@ func main() {
 	}
 
 	os.Exit(0)
+}
+
+func main() {
+	Execute()
 }
