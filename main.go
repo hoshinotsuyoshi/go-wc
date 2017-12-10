@@ -14,10 +14,10 @@ import (
 const version = "0.0.1"
 
 type FlagOptions struct {
-	printLines bool
-	printBytes bool
-	printWords bool
-	printChars bool
+	PrintLines bool
+	PrintBytes bool
+	PrintWords bool
+	PrintChars bool
 }
 
 type Counter struct {
@@ -79,16 +79,16 @@ func (c *Counter) Count(r io.Reader) (bool, error) {
 }
 
 func (c *Counter) Show(opts *FlagOptions, filename string) {
-	if opts.printLines {
+	if opts.PrintLines {
 		fmt.Printf(" %7d", c.lines)
 	}
-	if opts.printWords {
+	if opts.PrintWords {
 		fmt.Printf(" %7d", c.words)
 	}
-	if opts.printBytes {
+	if opts.PrintBytes {
 		fmt.Printf(" %7d", c.bytes)
 	}
-	if opts.printChars {
+	if opts.PrintChars {
 		fmt.Printf(" %7d", c.chars)
 	}
 	fmt.Printf(" %s\n", filename)
@@ -124,20 +124,20 @@ func (c *Counter) AddWords(n int) {
 func parseFlagOptions() *FlagOptions {
 	var opts = &FlagOptions{false, false, false, false}
 
-	flag.BoolVar(&opts.printLines, "l", false, "print lines")
-	flag.BoolVar(&opts.printBytes, "c", false, "print bytes")
-	flag.BoolVar(&opts.printWords, "w", false, "print words")
-	flag.BoolVar(&opts.printChars, "m", false, "print chars")
+	flag.BoolVar(&opts.PrintLines, "l", false, "print lines")
+	flag.BoolVar(&opts.PrintBytes, "c", false, "print bytes")
+	flag.BoolVar(&opts.PrintWords, "w", false, "print words")
+	flag.BoolVar(&opts.PrintChars, "m", false, "print chars")
 	flag.Parse()
 
-	if opts.printChars {
-		opts.printBytes = false
+	if opts.PrintChars {
+		opts.PrintBytes = false
 	}
 
-	if !opts.printLines && !opts.printBytes && !opts.printWords && !opts.printChars {
-		opts.printLines = true
-		opts.printBytes = true
-		opts.printWords = true
+	if !opts.PrintLines && !opts.PrintBytes && !opts.PrintWords && !opts.PrintChars {
+		opts.PrintLines = true
+		opts.PrintBytes = true
+		opts.PrintWords = true
 	}
 
 	return opts
