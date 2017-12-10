@@ -14,3 +14,14 @@ func ExampleCounter() {
 	// Output:
 	// true
 }
+
+func ExampleCounter_Show() {
+	c := main.Counter{}
+	opts := main.FlagOptions{}
+	opts.PrintLines = true
+	reader := strings.NewReader("abc\ndef\n")
+	c.Count(reader)
+	c.Show(&opts, "filename")
+	// Output:
+	// 2 filename
+}
