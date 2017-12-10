@@ -19,7 +19,7 @@ func ExampleCounter_Show_lines() {
 	c := main.Counter{}
 	opts := main.FlagOptions{}
 	opts.PrintLines = true
-	reader := strings.NewReader("あいう\ndef\n")
+	reader := strings.NewReader("あいう\nde f\n")
 	c.Count(reader)
 	c.Show(&opts, "filename")
 	// Output:
@@ -30,9 +30,31 @@ func ExampleCounter_Show_bytes() {
 	c := main.Counter{}
 	opts := main.FlagOptions{}
 	opts.PrintBytes = true
-	reader := strings.NewReader("あいう\ndef\n")
+	reader := strings.NewReader("あいう\nde f\n")
 	c.Count(reader)
 	c.Show(&opts, "filename")
 	// Output:
-	// 14 filename
+	// 15 filename
+}
+
+func ExampleCounter_Show_words() {
+	c := main.Counter{}
+	opts := main.FlagOptions{}
+	opts.PrintWords = true
+	reader := strings.NewReader("あいう\nde f\n")
+	c.Count(reader)
+	c.Show(&opts, "filename")
+	// Output:
+	// 3 filename
+}
+
+func ExampleCounter_Show_chars() {
+	c := main.Counter{}
+	opts := main.FlagOptions{}
+	opts.PrintChars = true
+	reader := strings.NewReader("あいう\nde f\n")
+	c.Count(reader)
+	c.Show(&opts, "filename")
+	// Output:
+	// 9 filename
 }
