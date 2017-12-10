@@ -1,0 +1,11 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/golang
+    working_directory: /go/src/github.com/hoshinotsuyoshi/go-wc
+    steps:
+      - checkout
+      - run:
+          name: go test
+          command: go test -v
