@@ -78,7 +78,7 @@ func (c *Counter) Count(r io.Reader) (bool, error) {
 	return true, nil
 }
 
-func (c *Counter) Show(opts *FlagOptions, filename string) {
+func (c *Counter) Show(opts FlagOptions, filename string) {
 	if opts.PrintLines {
 		fmt.Printf(" %7d", c.lines)
 	}
@@ -121,8 +121,8 @@ func (c *Counter) AddWords(n int) {
 	c.mux.Unlock()
 }
 
-func parseFlagOptions() *FlagOptions {
-	var opts = &FlagOptions{false, false, false, false}
+func parseFlagOptions() FlagOptions {
+	var opts = FlagOptions{false, false, false, false}
 
 	flag.BoolVar(&opts.PrintLines, "l", false, "print lines")
 	flag.BoolVar(&opts.PrintBytes, "c", false, "print bytes")
@@ -143,33 +143,32 @@ func parseFlagOptions() *FlagOptions {
 	return opts
 }
 
-func main() {
-	opts := parseFlagOptions()
+func Execute(stdin io.Reader, stdout io.Writer, stderr io.Writer, opts FlagOptions) int {
 
 	var totalCount = &Counter{}
 
 	filenames := flag.Args()
 	if len(filenames) == 0 {
 		var c = &Counter{}
-		_, err := c.Count(os.Stdin)
+		_, err := c.Count(stdin)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "stdin: count: ", err)
-			os.Exit(1)
+			fmt.Fprintln(stderr, "stdin: count: ", err)
+			return 1
 		}
 		c.Show(opts, "")
-		os.Exit(0)
+		return 0
 	}
 
 	for _, filename := range filenames {
 		var c = &Counter{}
 		fp, err := os.Open(filename)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "%s: open: %s\n", filename, err)
+			fmt.Fprintf(stderr, "%s: open: %s\n", filename, err)
 			continue
 		}
 		_, err = c.Count(fp)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "%s: count: %s\n", filename, err)
+			fmt.Fprintf(stderr, "%s: count: %s\n", filename, err)
 			continue
 		}
 		totalCount.Add(c)
@@ -181,5 +180,10 @@ func main() {
 		totalCount.Show(opts, "total")
 	}
 
-	os.Exit(0)
+	return 0
+}
+
+func main() {
+	opts := parseFlagOptions()
+	os.Exit(Execute(os.Stdin, os.Stdout, os.Stderr, opts))
 }
