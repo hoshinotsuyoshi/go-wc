@@ -7,11 +7,8 @@ jobs:
     steps:
       - checkout
       - run:
-          name: go test
-          command: go test -v
+          name: make all
+          command: make all
       - run:
-          name: go build
-          command: go build
-      - run:
-          name: regression test
-          command: ./regression.sh
+          name: make test-all
+          command: make test-all

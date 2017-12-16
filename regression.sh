@@ -1,4 +1,7 @@
-#!/bin/sh -ex
+#!/bin/sh -e
+if [ -n "$CI" ]; then
+  set -x
+fi
 
 ORIG_WC=/usr/bin/wc
 MY_WC=$PWD/go-wc
