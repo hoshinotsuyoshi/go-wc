@@ -1,3 +1,4 @@
+// this is main package.
 package main
 
 import (
@@ -105,13 +106,6 @@ func (c *Counter) Add(src *Counter) {
 	c.bytes += src.bytes
 	c.words += src.words
 	c.chars += src.chars
-	c.mux.Unlock()
-}
-
-// AddLines add lines.
-func (c *Counter) AddLines(n int) {
-	c.mux.Lock()
-	c.lines += n
 	c.mux.Unlock()
 }
 

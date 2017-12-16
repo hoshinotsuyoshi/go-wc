@@ -15,7 +15,7 @@ clean:
 	rm -f $(BINARY_NAME)
 deps-test-all: golint
 lint:
-	$(GOLINT) -min_confidence 0.3 -set_exit_status
+	$(GOLINT) -min_confidence 0.1 -set_exit_status
 golint:
 	$(GOGET) github.com/golang/lint/golint
 regression:
