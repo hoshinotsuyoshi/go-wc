@@ -78,7 +78,7 @@ func (c *Counter) Count(r io.Reader) (bool, error) {
 	return true, nil
 }
 
-func (c *Counter) Show(opts *FlagOptions, filename string) {
+func (c *Counter) Show(opts FlagOptions, filename string) {
 	if opts.PrintLines {
 		fmt.Printf(" %7d", c.lines)
 	}
@@ -121,8 +121,8 @@ func (c *Counter) AddWords(n int) {
 	c.mux.Unlock()
 }
 
-func parseFlagOptions() *FlagOptions {
-	var opts = &FlagOptions{false, false, false, false}
+func parseFlagOptions() FlagOptions {
+	var opts = FlagOptions{false, false, false, false}
 
 	flag.BoolVar(&opts.PrintLines, "l", false, "print lines")
 	flag.BoolVar(&opts.PrintBytes, "c", false, "print bytes")
@@ -143,8 +143,7 @@ func parseFlagOptions() *FlagOptions {
 	return opts
 }
 
-func Execute(stdin io.Reader, stdout io.Writer, stderr io.Writer) int {
-	opts := parseFlagOptions()
+func Execute(stdin io.Reader, stdout io.Writer, stderr io.Writer, opts FlagOptions) int {
 
 	var totalCount = &Counter{}
 
@@ -185,5 +184,6 @@ func Execute(stdin io.Reader, stdout io.Writer, stderr io.Writer) int {
 }
 
 func main() {
-	os.Exit(Execute(os.Stdin, os.Stdout, os.Stderr))
+	opts := parseFlagOptions()
+	os.Exit(Execute(os.Stdin, os.Stdout, os.Stderr, opts))
 }
