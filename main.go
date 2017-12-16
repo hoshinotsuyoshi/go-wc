@@ -13,6 +13,7 @@ import (
 
 const version = "0.0.1"
 
+// FlagOptions remembers flag options.
 type FlagOptions struct {
 	PrintLines bool
 	PrintBytes bool
@@ -20,6 +21,7 @@ type FlagOptions struct {
 	PrintChars bool
 }
 
+// Counter remembers lines, words, bytes, and chars.
 type Counter struct {
 	lines int
 	words int
@@ -28,6 +30,7 @@ type Counter struct {
 	mux   sync.Mutex
 }
 
+// Count adds lines, words, byte and chars.
 func (c *Counter) Count(r io.Reader) (bool, error) {
 	reader := bufio.NewReader(r)
 	var wg sync.WaitGroup
@@ -49,12 +52,12 @@ func (c *Counter) Count(r io.Reader) (bool, error) {
 				wasInField := inField
 				inField = !unicode.IsSpace(r)
 				if inField && !wasInField {
-					localCounter.words += 1
+					localCounter.words++
 				}
 				if r == '\n' {
-					localCounter.lines += 1
+					localCounter.lines++
 				}
-				localCounter.chars += 1
+				localCounter.chars++
 				i += size
 			}
 			c.Add(localCounter)
@@ -78,6 +81,7 @@ func (c *Counter) Count(r io.Reader) (bool, error) {
 	return true, nil
 }
 
+// Show shows flag options.
 func (c *Counter) Show(opts FlagOptions, filename string) {
 	if opts.PrintLines {
 		fmt.Printf(" %7d", c.lines)
@@ -94,6 +98,7 @@ func (c *Counter) Show(opts FlagOptions, filename string) {
 	fmt.Printf(" %s\n", filename)
 }
 
+// Add adds lines, words, byte and chars.
 func (c *Counter) Add(src *Counter) {
 	c.mux.Lock()
 	c.lines += src.lines
@@ -103,18 +108,21 @@ func (c *Counter) Add(src *Counter) {
 	c.mux.Unlock()
 }
 
+// AddLines add lines.
 func (c *Counter) AddLines(n int) {
 	c.mux.Lock()
 	c.lines += n
 	c.mux.Unlock()
 }
 
+// AddBytes add bytes.
 func (c *Counter) AddBytes(n int) {
 	c.mux.Lock()
 	c.bytes += n
 	c.mux.Unlock()
 }
 
+// AddWords add words.
 func (c *Counter) AddWords(n int) {
 	c.mux.Lock()
 	c.words += n
@@ -143,6 +151,7 @@ func parseFlagOptions() FlagOptions {
 	return opts
 }
 
+// Execute is main function.
 func Execute(stdin io.Reader, stdout io.Writer, stderr io.Writer, opts FlagOptions) int {
 
 	var totalCount = &Counter{}
